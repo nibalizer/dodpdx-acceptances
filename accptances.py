@@ -1,10 +1,28 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import config
+
 import csv
 import sys
 
+import os
+import re
+
+from smtplib import SMTP_SSL as SMTP       # this invokes the secure SMTP protocol (port 465, uses SSL)
+from email.mime.text import MIMEText
+
+
 from jinja2 import Environment, FileSystemLoader
+
+SMTPserver = 'mail.messagingengine.com'
+sender =     'DevOpsDays Portland Organizers <nibz+devopsdays@spencerkrum.com'
+
+# typical values for text_subtype are plain, html, xml
+text_subtype = 'plain'
+
+
+
 
 
 def load_csv(filename='accepted.csv'):
@@ -19,6 +37,7 @@ def load_csv(filename='accepted.csv'):
             data['bio'] = row['speaker 1: bio']
             data['description'] = row['description']
             data['type'] = row['What length of talk is this?']
+            data['email'] = row['speaker 1: email']
             talks.append(data)
         return talks
 
@@ -32,8 +51,25 @@ if __name__ == "__main__":
     data = load_csv()
     for talk in data:
         if talk['type'] == '30 minute':
-            print template.render(talk=talk)
-            print
-            print
-            print '#'
-            print
+            print "To: {0}".format(talk['email'])
+            content = template.render(talk=talk)
+            destination = [talk['email']]
+            subject="Congratulations, we want you to speak at DevOpsDays Portland!"
+            try:
+                msg = MIMEText(content, text_subtype)
+                msg['Subject']=       subject
+                msg['From']   = sender # some SMTP servers will do this automatically, not all
+                msg['Reply-To'] = 'organizers-portland-2016@devopsdays.org'
+
+                conn = SMTP(SMTPserver)
+                conn.set_debuglevel(False)
+                conn.login(config.USERNAME, config.PASSWORD)
+                try:
+
+                    conn.sendmail(sender, destination, msg.as_string())
+                    print sender, destination, msg.as_string()
+                finally:
+                    conn.quit()
+
+            except Exception, exc:
+                sys.exit( "mail failed; %s" % str(exc) ) # give a error message
