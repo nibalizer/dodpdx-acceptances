@@ -54,7 +54,7 @@ if __name__ == "__main__":
             print "To: {0}".format(talk['email'])
             content = template.render(talk=talk)
             destination = [talk['email'], 'organizers-portland-2016@devopsdays.org']
-            subject="Test #1 Congratulations, we want you to speak at DevOpsDays Portland!"
+            subject="Congratulations, we want you to speak at DevOpsDays Portland!"
             try:
                 msg = MIMEText(content, text_subtype)
                 msg['Subject']=       subject
