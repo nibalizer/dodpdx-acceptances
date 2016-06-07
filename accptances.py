@@ -16,7 +16,7 @@ from email.mime.text import MIMEText
 from jinja2 import Environment, FileSystemLoader
 
 SMTPserver = 'mail.messagingengine.com'
-sender =     'DevOpsDays Portland Organizers <nibz+devopsdays@spencerkrum.com'
+sender =     'DevOpsDays Portland Organizers <nibz+devopsdays@spencerkrum.com>'
 
 # typical values for text_subtype are plain, html, xml
 text_subtype = 'plain'
@@ -53,12 +53,14 @@ if __name__ == "__main__":
         if talk['type'] == '30 minute':
             print "To: {0}".format(talk['email'])
             content = template.render(talk=talk)
-            destination = [talk['email']]
-            subject="Congratulations, we want you to speak at DevOpsDays Portland!"
+            destination = [talk['email'], 'organizers-portland-2016@devopsdays.org']
+            subject="Test #1 Congratulations, we want you to speak at DevOpsDays Portland!"
             try:
                 msg = MIMEText(content, text_subtype)
                 msg['Subject']=       subject
+                msg['To'] = talk['email']
                 msg['From']   = sender # some SMTP servers will do this automatically, not all
+                msg['Cc'] = 'organizers-portland-2016@devopsdays.org'
                 msg['Reply-To'] = 'organizers-portland-2016@devopsdays.org'
 
                 conn = SMTP(SMTPserver)
