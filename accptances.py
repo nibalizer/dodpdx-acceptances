@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     data = load_csv()
     for talk in data:
-        if talk['type'] == '30 minute':
+        if talk['type'] == 'Ignite':
             print "To: {0}".format(talk['email'])
             content = template.render(talk=talk)
             destination = [talk['email'], 'organizers-portland-2016@devopsdays.org']
@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 conn.login(config.USERNAME, config.PASSWORD)
                 try:
 
-                    conn.sendmail(sender, destination, msg.as_string())
+                    #conn.sendmail(sender, destination, msg.as_string())
                     print sender, destination, msg.as_string()
                 finally:
                     conn.quit()
