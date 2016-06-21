@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 conn.login(config.USERNAME, config.PASSWORD)
                 try:
 
-                    #conn.sendmail(sender, destination, msg.as_string())
+                    conn.sendmail(sender, destination, msg.as_string())
                     print sender, destination, msg.as_string()
                 finally:
                     conn.quit()
